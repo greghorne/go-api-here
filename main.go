@@ -70,25 +70,25 @@ func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, 
 
 		jsonText := strings.Replace(string(body), "\"", "", -1)
 
-		// fmt.Println("")
-		// // fmt.Println(jsonText)
-		// fmt.Println("")
-
 		nStart   := strings.Index(jsonText, startSearchText) + len(startSearchText)
 		nEnd     := strings.Index(jsonText, endSearchText)
 
 		x := strings.Split(jsonText[nStart:nEnd], ",")
-		fmt.Println(x)
 
-		// var s []string
-		// for n := 0; n < len(x); n++ {
-		// 	s.append(s, x[n])
-		// }
-		// fmt.Println(s)
-		// fmt.Println(jsonText[nStart:nEnd])
-
-		// fmt.Println(jsonText)
-		geojson = jsonText[nStart:nEnd]
+		var s []string
+		for n := 0; n < len(x); n+=2 {
+			
+			switch num := n; num {
+				case 0:
+					s = append(s, (x[n] + "," + x[n+1] +"],"))
+				case len(x) - 2:
+					s = append(s, ("[" + x[n] + "," + x[n+1]))
+				default:
+					s = append(s, "[" + (x[n] + "," + x[n+1]) + "],")
+			}
+		}
+		fmt.Println(strings.Join(s, ""))
+		geojson = strings.Join(s, "")
 	} 
 
 	return
