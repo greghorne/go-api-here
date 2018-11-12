@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	// "strconv"
 	"strings"
-	// "fmt"
+	"fmt"
 )
 
 
@@ -18,7 +18,7 @@ import (
 func main() {
 
 	router := mux.NewRouter()
-	router.HandleFunc("/v1/here-isochrone/{lng}/{lat}/{time}/{key}", v1HereIsochrone).Methods("GET")
+	router.HandleFunc("/v1/here-isochrone/{lat}/{lng}/{time}/{appid}/{appcode}", v1HereIsochrone).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8003", router))
 
 }
@@ -32,7 +32,7 @@ func v1HereIsochrone (w http.ResponseWriter, r *http.Request) {
 
 	var jsonResult map[string]string
 
-	if isochrone, msg := v1DoBingIsochrone(params["lng"], params["lat"], params["time"], params["key"]); msg == "" {
+	if isochrone, msg := v1DoHereIsochrone(params["lng"], params["lat"], params["time"], params["appid"], params["appcode"]); msg == "" {
 		jsonResult = map[string]string{"bing": isochrone}
 	} else {
 		jsonResult = map[string]string{"intersects": ""}
@@ -47,10 +47,13 @@ func v1HereIsochrone (w http.ResponseWriter, r *http.Request) {
 
 
 // ============================================================
-func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sKey string) (geojson string, msg string) {
+func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, sAppCode string) (geojson string, msg string) {
 
-	here_url := "http://dev.virtualearth.net/REST/v1/Routes/Isochrones?waypoint=" +
-		syLat + "," + sxLng + "&maxTime=" + sTime + "&timeUnit=Seconds&travelMode=Driving&key=" + sKey
+	// https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=UTj04dkPMMihuOoDUYRn&app_code=jWQt8eRmJ0Lb67sKKTBBOQ
+	// &mode=shortest;car;traffic:disabled&start=geo!52.51578,13.37749&range=3&rangetype=time
+
+	here_url := "https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=" + sAppID + "&app_code=" + sAppCode + "&mode=shortest;car;traffic:disabled&start=geo!" + syLat + "," + sxLng + "&range=180&rangetype=time"
+	fmt.Println(here_url)
 
 	startSearchText := "\"polygons\":["
 	endSearchText   := "]}]}],\"statusCode\""
@@ -67,6 +70,7 @@ func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sKey string) (g
 			geojson = ""
 			msg     = err.Error()
 		} 
+		fmt.Println(response)
 
 		jsonText := string(body)
 
