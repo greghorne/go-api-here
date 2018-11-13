@@ -49,7 +49,7 @@ func v1HereIsochrone (w http.ResponseWriter, r *http.Request) {
 // ============================================================
 func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, sAppCode string) (geojson string, msg string) {
 
-	here_url := "https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=" + sAppID + "&app_code=" + sAppCode + "&mode=shortest;car;traffic:disabled&start=geo!" + syLat + "," + sxLng + "&range=" + sTime + "&rangetype=time"
+	here_url := "https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=" + sAppID + "&app_code=" + sAppCode + "&mode=fastest;car;traffic:disabled&start=geo!" + syLat + "," + sxLng + "&range=" + sTime + "&rangetype=time"
 
 	startSearchText := "[{id:0,shape:"
 	endSearchText   := "}]}],start:"
