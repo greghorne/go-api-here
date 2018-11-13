@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	// "strconv"
 	"strings"
-	"fmt"
+	// "fmt"
 )
 
 
@@ -49,8 +49,7 @@ func v1HereIsochrone (w http.ResponseWriter, r *http.Request) {
 // ============================================================
 func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, sAppCode string) (geojson string, msg string) {
 
-	here_url := "https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=" + sAppID + "&app_code=" + sAppCode + "&mode=shortest;car;traffic:disabled&start=geo!" + syLat + "," + sxLng + "&range=180&rangetype=time"
-	fmt.Println(here_url)
+	here_url := "https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id=" + sAppID + "&app_code=" + sAppCode + "&mode=shortest;car;traffic:disabled&start=geo!" + syLat + "," + sxLng + "&range=" + sTime + "&rangetype=time"
 
 	startSearchText := "[{id:0,shape:"
 	endSearchText   := "}]}],start:"
@@ -87,7 +86,7 @@ func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, 
 					s = append(s, "[" + (x[n] + "," + x[n+1]) + "],")
 			}
 		}
-		fmt.Println(strings.Join(s, ""))
+
 		geojson = strings.Join(s, "")
 	} 
 
