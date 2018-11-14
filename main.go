@@ -6,9 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"encoding/json"
-	// "strconv"
 	"strings"
-	// "fmt"
 )
 
 
@@ -87,7 +85,7 @@ func v1DoHereIsochrone(sxLng string, syLat string, sTime string, sAppID string, 
 			}
 		}
 
-		geojson = strings.Join(s, "")
+		geojson = "[" + strings.Join(s, "") + "]"
 	} 
 
 	return
