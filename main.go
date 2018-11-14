@@ -33,7 +33,7 @@ func v1HereIsochrone (w http.ResponseWriter, r *http.Request) {
 	if isochrone, msg := v1DoHereIsochrone(params["lng"], params["lat"], params["time"], params["appid"], params["appcode"]); msg == "" {
 		jsonResult = map[string]string{"here": isochrone}
 	} else {
-		jsonResult = map[string]string{"intersects": ""}
+		jsonResult = map[string]string{"here": msg}
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
